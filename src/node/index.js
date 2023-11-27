@@ -2,8 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
-const port = 3522
-;
+const port = 3522;
 
 const cors = require("cors");
 app.use(cors());
