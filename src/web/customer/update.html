@@ -1,22 +1,93 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
-    <!-- Bootstrap CSSの読み込み -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>顧客情報編集</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
+  </head>
+  <body>
     <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
+      <h1 class="mb-4">顧客情報編集</h1>
+      
+      <!-- 編集フォーム -->
+      <form id="editForm">
+        <div class="form-group">
+          <label for="companyName">会社名：</label>
+          <input type="text" id="companyName" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="industry">業界：</label>
+          <input type="text" id="industry" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="contact">連絡先：</label>
+          <input type="text" id="contact" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="location">所在地：</label>
+          <input type="text" id="location" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </form>
     </div>
+
     <script type="module">
-        <!-- ここにJSを書く -->
+        import config from "../config.js";
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get("customer_id"); 
+      
+        // 顧客情報をフォームにロード
+        fetch(`${config.apiUrl}/customer/${customerId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(customer => {
+            document.getElementById("companyName").value = customer.company_name;
+            document.getElementById("industry").value = customer.industry;
+            document.getElementById("contact").value = customer.contact;
+            document.getElementById("location").value = customer.location;
+          })
+          .catch(error => console.error("Error:", error));
+      
+        // フォームの送信イベントリスナー
+        document.getElementById("editForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const updatedCustomer = {
+        companyName: document.getElementById("companyName").value, // ここを修正
+        industry: document.getElementById("industry").value,
+        contact: document.getElementById("contact").value,
+        location: document.getElementById("location").value
+         };
+
+        // 更新APIへのリクエスト
+        fetch(`${config.apiUrl}/customer/${customerId}`, {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedCustomer)
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("情報を更新しました。");
+            window.location.href = "list.html"; // 顧客リストページに戻る
+          } else {
+            alert("更新に失敗しました。");
+          }
+        })
+        .catch(error => console.error("Error:", error));
+      });
     </script>
-    <!-- BootstrapのJavaScriptの読み込み -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+
+    <!-- BootstrapのJavaScriptと依存関係のリンク -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
