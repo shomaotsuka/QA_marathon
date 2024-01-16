@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'api_shoma_otsuka'
+  apiUrl: 'http://localhost:3522'
 };
 
 export default config;

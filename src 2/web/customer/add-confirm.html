@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>確認画面</title>
+    <!-- Bootstrap CSSの読み込み -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">入力内容の確認</h2>
+        <p><strong>会社名:</strong> <span id="confirmCompanyName"></span></p>
+        <p><strong>業種:</strong> <span id="confirmIndustry"></span></p>
+        <p><strong>連絡先:</strong> <span id="confirmContact"></span></p>
+        <p><strong>所在地:</strong> <span id="confirmLocation"></span></p>
+        <button id="confirmButton" class="btn btn-primary">保存する</button>
+    </div>
+    <!-- BootstrapのJavaScriptの読み込み -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="module">
+        import config from '../config.js';
+
+        // localStorageからデータを取得
+        const formData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            formData[key] = localStorage.getItem(key);
+        }
+
+        // 確認画面にデータを表示
+        document.getElementById('confirmCompanyName').textContent = formData['companyName'];
+        document.getElementById('confirmIndustry').textContent = formData['industry'];
+        document.getElementById('confirmContact').textContent = formData['contact'];
+        document.getElementById('confirmLocation').textContent = formData['location'];
+
+        // 確認ボタンにイベントリスナーを追加
+        document.getElementById('confirmButton').addEventListener('click', function() {
+            fetch(config.apiUrl + '/add-customer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 変更: Content-Typeをapplication/jsonに変更
+                },
+                body: JSON.stringify(formData), // 変更: JSON.stringifyを使用してデータをJSON形式に変換
+            }).then(response => response.json())
+              .then(data => {
+                if(data.success) {
+                    alert('顧客情報が正常に保存されました。');
+                    // localStorageをリセットして入力フォームに戻る
+                    for (const key in formData) {
+                        localStorage.removeItem(key);
+                    }
+                    window.location.href = 'add.html';
+                } else {
+                    alert('保存に失敗しました。');
+                }
+              })
+              .catch(error => console.error('エラー:', error));
+        });
+    </script>
+</body>
+</html>
