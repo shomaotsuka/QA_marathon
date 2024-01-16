@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: '/api_shoma_otsuka'//ここ修正
+  apiUrl: 'http://localhost:3000'
 };
 
 export default config;
