@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'api_shoma_otsuka'//ここの修正
+  apiUrl: '/api_shoma_otsuka'//ここ修正
 };
 
 export default config;
