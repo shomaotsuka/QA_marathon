@@ -1,5 +1,4 @@
 const config = {
-//うまくできたはず
   apiUrl: '/api_shoma_otsuka'
 };
 
