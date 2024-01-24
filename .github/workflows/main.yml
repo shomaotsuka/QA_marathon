@@ -27,4 +27,4 @@ jobs:
           SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}
           SSH_KEY: ${{ secrets.PROD_SSHE_SSH_KEY }}
-      - run: ssh ${{ steps.ssh.outputs.SERVER }} bash /app/deploy.sh shoma_otsuka
+      - run: ssh ${{ steps.ssh.outputs.SERVER }} bash /app/shoma_otsuka/shoma_deploy.sh shoma_otsuka
